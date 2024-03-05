@@ -28,7 +28,7 @@ class BaseModel():
                 of __dict__ of the instance.
     '''
 
-    def __init__(self, id=None, created_at=None, updated_at=None):
+    def __init__(self, *args, **kwargs):
         '''
             initilize instances with public attributes.
 
