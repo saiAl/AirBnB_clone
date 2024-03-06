@@ -3,6 +3,7 @@
 
 from uuid import uuid4
 from datetime import datetime
+from models import storage
 
 
 class BaseModel():
@@ -41,10 +42,20 @@ class BaseModel():
                     time you change your object.
 
         '''
-
-        self.id = str(uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        if len(kwargs) > 0:
+            for key in kwargs:
+                if key != "__class__":
+                    setattr(self, key, kwargs[key])
+            self.id = kwargs.get("id", str(uuid4()))
+            self.created_at = datetime.fromisoformat(
+                        kwargs.get("created_at", datetime.now().isoformat()))
+            self.created_at = datetime.fromisoformat(
+                        kwargs.get("updated_at", datetime.now().isoformat()))
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+            storage.new(self)
 
     def __str__(self):
         """
@@ -53,7 +64,7 @@ class BaseModel():
             Returns: string [<class name>] (<self.id>) <self.__dict__>
 
         """
-        return f"[{self.__class__.__name__}] {self.id} {self.__dict__}"
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
         """
@@ -61,6 +72,7 @@ class BaseModel():
         """
 
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """
@@ -77,8 +89,8 @@ class BaseModel():
         new = {}
         for key, value in self.__dict__.items():
             if key == "created_at" or key == "updated_at":
-                new.update({key: value.strftime("%Y-%m-%dT%H:%M:%S.%f")})
+                new.update({key: value.isoformat()})
             else:
                 new.update({key: value})
-        new.update({"__class__": self.__class__.__name__})
+        new["__class__"] = self.__class__.__name__
         return new
