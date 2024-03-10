@@ -61,7 +61,17 @@ class testBaseMode(unittest.TestCase):
         new_dict = obj.to_dict()
         self.assertEqual(new_dict["created_at"], obj.created_at.isoformat())
 
+    
+    def test_kwargs_not_empty(self):
+        """ kwargs not empty """
 
+        obj = BaseModel(name="Ali")
+        attr = getattr(obj, "name")
+        self.assertEqual("Ali", attr)
+    
+    def test_kwargs_created_at(self):
+        """ created_at in iso format"""
+        pass
 
 if __name__ == '__main__':
     unittest.main()

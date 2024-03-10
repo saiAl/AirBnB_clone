@@ -42,15 +42,15 @@ class BaseModel():
                     time you change your object.
 
         '''
-        if len(kwargs) > 0:
+
+        if len(kwargs) != 0:
             for key in kwargs:
                 if key != "__class__":
-                    setattr(self, key, kwargs[key])
-            self.id = kwargs.get("id", str(uuid4()))
-            self.created_at = datetime.fromisoformat(
-                        kwargs.get("created_at", datetime.now().isoformat()))
-            self.created_at = datetime.fromisoformat(
-                        kwargs.get("updated_at", datetime.now().isoformat()))
+                    if key == "created_at" or key == "updated_at":
+                        datetime_obj = datetime.fromisoformat(kwargs[key])
+                        setattr(self, key, datetime_obj)
+                    else:
+                        setattr(self, key, kwargs[key])
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
@@ -85,12 +85,10 @@ class BaseModel():
                 created_at and updated_at converted to string object
                     in ISO format: %Y-%m-%dT%H:%M:%S.%f
         """
-
-        new = {}
-        for key, value in self.__dict__.items():
-            if key == "created_at" or key == "updated_at":
-                new.update({key: value.isoformat()})
-            else:
-                new.update({key: value})
+        
+        new = self.__dict__.copy()
+        new["created_at"] = new["created_at"].isoformat()
+        new["updated_at"] = new["updated_at"].isoformat()
         new["__class__"] = self.__class__.__name__
+
         return new
