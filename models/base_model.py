@@ -85,7 +85,7 @@ class BaseModel():
                 created_at and updated_at converted to string object
                     in ISO format: %Y-%m-%dT%H:%M:%S.%f
         """
-        
+
         new = self.__dict__.copy()
         new["created_at"] = new["created_at"].isoformat()
         new["updated_at"] = new["updated_at"].isoformat()
