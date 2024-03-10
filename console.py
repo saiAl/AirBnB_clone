@@ -6,6 +6,13 @@ import cmd
 import json
 import os
 from models import storage, deserialize, cmd_tokenize, check_args, serialize
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
@@ -66,14 +73,6 @@ class HBNBCommand(cmd.Cmd):
         else:
             def create_instances(idx):
                 """ handle the instances creatation """
-
-                from models.base_model import BaseModel
-                from models.user import User
-                from models.state import State
-                from models.city import City
-                from models.amenity import Amenity
-                from models.place import Place
-                from models.review import Review
 
                 if idx == 0:
                     instance = BaseModel()
