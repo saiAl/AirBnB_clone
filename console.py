@@ -201,7 +201,7 @@ class HBNBCommand(cmd.Cmd):
 
         new = args[0].split(' ')
         try:
-            if new is None:
+            if new == '':
                 print("** class name missing **")
             else:
                 if new[0] not in self._classes:
@@ -295,7 +295,7 @@ class HBNBCommand(cmd.Cmd):
 
         new = args[0].split(' ')
 
-        if new is None:
+        if new[0] == '':
             print("** class name missing **")
         else:
             if new[0] not in self._classes:
