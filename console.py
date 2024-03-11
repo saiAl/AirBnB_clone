@@ -199,7 +199,7 @@ class HBNBCommand(cmd.Cmd):
                 of an instance based on the class name and id
         """
 
-        new = args[0].split(' ', 1)
+        new = args[0].split(' ')
         try:
             if new is None:
                 print("** class name missing **")
@@ -293,7 +293,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, *args):
         """ Updates an instance based on the class name and id """
 
-        new = args[0].split(' ', 1)
+        new = args[0].split(' ')
 
         if new is None:
             print("** class name missing **")
