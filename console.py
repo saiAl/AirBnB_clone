@@ -146,7 +146,8 @@ class HBNBCommand(cmd.Cmd):
                         instances.append(f"[{key.split('.')[0]}] ({key.split('.')[1]}) {value}")
                 if args[0] == '':
                     instances.append(f"[{key.split('.')[0]}] ({key.split('.')[1]}) {value}")
-            print(instances)
+            if len(instances) != 0:
+                print(instances)
         except Exception:
             pass
 
@@ -192,33 +193,35 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, line):
         """ Updates an instance based on the class name and id """
 
-        new = cmd_tokenize(line)
-        if new is None:
-            print("** class name missing **")
-        if new is not None:
-            if len(new) == 1:
+        try:
+            new = cmd_tokenize(line)
+            if new is None:
+                print("** class name missing **")
+            if new is not None:
                 if new[0] not in self._classes:
                     print("** class doesn't exist **")
                 else:
                     print("** instance id missing **")
-            elif len(new) == 2:
-                print("** attribute name missing **")
-            elif len(new) == 3:
-                print("** value missing **")
-            else:
-                class_name, class_id, attr_name, attr_value = new
-                if os.path.isfile("file.json"):
-                    data = deserialize("file.json")
-                    for key, value in data.items():
-                        if class_name == key.split('.')[0]:
-                            if class_id == key.split(".")[1]:
-                                data[key].update({attr_name: str(attr_value)})
-                                break
-                    else:
-                        print("** no instance found **")
+                if len(new) == 2:
+                    print("** attribute name missing **")
+                elif len(new) == 3:
+                    print("** value missing **")
+                else:
+                    class_name, class_id, attr_name, attr_value = new
+                    if os.path.isfile("file.json"):
+                        data = deserialize("file.json")
+                        for key, value in data.items():
+                            if class_name == key.split('.')[0]:
+                                if class_id == key.split(".")[1]:
+                                    data[key].update({attr_name: str(attr_value)})
+                                    break
+                        else:
+                            print("** no instance found **")
 
-                    serialize("file.json", data)
-
+                        serialize("file.json", data)
+        except Exception:
+            pass
+    
     def help_destroy(self):
         """ help message of update() method """
 
