@@ -5,6 +5,7 @@
 import cmd
 import json
 import os
+import re
 from models import storage, deserialize, cmd_tokenize, serialize
 from models.base_model import BaseModel
 from models.user import User
@@ -60,6 +61,97 @@ class HBNBCommand(cmd.Cmd):
         """ overwrite the defualt behaviour """
         pass
 
+    def all(self, class_name):
+        """ list all class_name instance """
+        self.do_all(class_name)
+
+    def count(self, class_name):
+        """ retrive number of instances """
+        count = 0
+        if os.path.isfile("file.json"):
+            data = deserialize("file.json")
+            for key in data.keys():
+                if class_name == key.split('.')[0]:
+                    count += 1
+            print(count)
+
+    def do_BaseModel(self, line):
+        """ class as a command """
+        try:
+            new = line.split('.')
+            if new[1] == "all()":
+                self.all("BaseModel")
+            if new[1] == "count()":
+                self.count("BaseModel")
+        except Exception:
+            pass
+
+    def do_User(self, line):
+        """ class as a command """
+        try:
+            new = line.split('.')
+            if new[1] == "all()":
+                self.all("User")
+            if new[1] == "count()":
+                self.count("User")
+        except Exception:
+            pass
+
+    def do_State(self, line):
+        """ class as a command """
+        try:
+            new = line.split('.')
+            if new[1] == "all()":
+                self.all("State")
+            if new[1] == "count()":
+                self.count("State")
+        except Exception:
+            pass
+
+    def do_City(self, line):
+        """ class as a command """
+        try:
+            new = line.split('.')
+            if new[1] == "all()":
+                self.all("City")
+            if new[1] == "count()":
+                self.count("City")
+        except Exception:
+            pass
+
+    def do_Place(self, line):
+        """ class as a command """
+        try:
+            new = line.split('.')
+            if new[1] == "all()":
+                self.all("Place")
+            if new[1] == "count()":
+                self.count("Place")
+        except Exception:
+            pass
+
+    def do_Amenity(self, line):
+        """ class as a command """
+        try:
+            new = line.split('.')
+            if new[1] == "all()":
+                self.all("Amenity")
+            if new[1] == "count()":
+                self.count("Amenity")
+        except Exception:
+            pass
+
+    def do_Review(self, line):
+        """ class as a command """
+        try:
+            new = line.split('.')
+            if new[1] == "all()":
+                self.all("Review")
+            if new[1] == "count()":
+                self.count("Review")
+        except Exception:
+            pass
+
     def do_create(self, *args):
         """
             create a new instance of BaseModel
@@ -107,7 +199,7 @@ class HBNBCommand(cmd.Cmd):
                 of an instance based on the class name and id
         """
 
-        new = cmd_tokenize(args[0])
+        new = args[0].split(' ', 1)
         try:
             if new is None:
                 print("** class name missing **")
@@ -201,7 +293,8 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, *args):
         """ Updates an instance based on the class name and id """
 
-        new = cmd_tokenize(args[0])
+        new = args[0].split(' ', 1)
+
         if new is None:
             print("** class name missing **")
         else:
