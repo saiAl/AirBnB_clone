@@ -35,19 +35,3 @@ def cmd_tokenize(token):
     if token == '':
         return None
     return token.split(' ')
-
-
-def check_args(arg):
-    """ """
-    if arg is None:
-        print("** class name missing **")
-        return None
-    elif arg[0] != "BaseModel":
-        print("** class doesn't exist **")
-        return None
-    elif len(arg) == 1:
-        print("** instance id missing **")
-        return None
-    else:
-        return arg
-

@@ -5,7 +5,7 @@
 import cmd
 import json
 import os
-from models import storage, deserialize, cmd_tokenize, check_args, serialize
+from models import storage, deserialize, cmd_tokenize, serialize
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -101,24 +101,32 @@ class HBNBCommand(cmd.Cmd):
         saves it (to the JSON file) and prints the id.
             Ex: create BaseModel""")
 
-    def do_show(self, line):
+    def do_show(self, *args):
         """
             Prints the string representation
                 of an instance based on the class name and id
         """
 
-        new = cmd_tokenize(line)
-
+        new = cmd_tokenize(args[0])
         try:
-            class_name, class_id = check_args(new)
-            if os.path.isfile("file.json"):
-                data = deserialize("file.json")
-                for key, value in data.items():
-                    if class_id == key.split('.')[1]:
-                        print(f"[{key.split('.')[0]}] ({key.split('.')[1]}) {value}")
-                        break
+            if new is None:
+                print("** class name missing **")
+            else:
+                if new[0] not in self._classes:
+                    print("** class doesn't exist **")
                 else:
-                    print("** no instance found **")
+                    if len(new) == 1:
+                        print("** instance id missing **")
+                    else:
+                        class_name, class_id = new
+                        if os.path.isfile("file.json"):
+                            data = deserialize("file.json")
+                            for key, value in data.items():
+                                if class_id == key.split('.')[1]:
+                                    print(f"[{key.split('.')[0]}] ({key.split('.')[1]}) {value}")
+                                    break
+                            else:
+                                print("** no instance found **")
         except Exception:
             pass
 
@@ -190,23 +198,23 @@ class HBNBCommand(cmd.Cmd):
         print("""Deletes an instance based on the class name and id
         Ex: $ destroy BaseModel 1234-1234-1234.""")
 
-    def do_update(self, line):
+    def do_update(self, *args):
         """ Updates an instance based on the class name and id """
 
-        try:
-            new = cmd_tokenize(line)
-            if new is None:
-                print("** class name missing **")
-            if new is not None:
-                if new[0] not in self._classes:
-                    print("** class doesn't exist **")
-                else:
+        new = cmd_tokenize(args[0])
+        if new is None:
+            print("** class name missing **")
+        else:
+            if new[0] not in self._classes:
+                print("** class doesn't exist **")
+            else:
+                if len(new) == 1:
                     print("** instance id missing **")
                 if len(new) == 2:
                     print("** attribute name missing **")
-                elif len(new) == 3:
+                if len(new) == 3:
                     print("** value missing **")
-                else:
+                if len(new) == 4:
                     class_name, class_id, attr_name, attr_value = new
                     if os.path.isfile("file.json"):
                         data = deserialize("file.json")
@@ -218,10 +226,8 @@ class HBNBCommand(cmd.Cmd):
                         else:
                             print("** no instance found **")
 
-                        serialize("file.json", data)
-        except Exception:
-            pass
-    
+                    serialize("file.json", data)
+
     def help_destroy(self):
         """ help message of update() method """
 
